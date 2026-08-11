@@ -124,6 +124,12 @@
 
       <div class="login-box">
 
+        <select id="companySelect">
+  <option value="">Pilih perusahaan</option>
+  <option value="ABC001">ABC Company</option>
+  <option value="XYZ001">XYZ Company</option>
+</select>
+
         <select id="customerSelect">
 
           <option value="">
@@ -215,11 +221,16 @@
           .getElementById("customerSelect")
           .value;
 
-      if (!customerId) {
+      const companyId =
+  document
+    .getElementById("companySelect")
+    .value;
+
+      if (!companyId || !customerId) {
 
         alert(
-          "Silakan pilih akun terlebih dahulu."
-        );
+  "Silakan pilih perusahaan dan akun terlebih dahulu."
+);
 
         return;
       }
@@ -245,7 +256,7 @@
                   customerId,
 
                 companyId:
-                  "ABC001"
+                  companyId
 
               })
             }
