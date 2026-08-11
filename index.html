@@ -1,0 +1,408 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>ABC Company - Client Demo</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f4f8;
+      color: #222;
+    }
+
+    .header {
+      background: #1976d2;
+      color: white;
+      padding: 18px;
+    }
+
+    .company {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .login-box {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    select,
+    button {
+      padding: 11px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    select {
+      flex: 1;
+      border: 1px solid #ccc;
+      background: white;
+    }
+
+    button {
+      border: none;
+      background: #1976d2;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .dashboard {
+      display: none;
+    }
+
+    .live-chat {
+      margin-top: 15px;
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+    }
+
+    .status {
+      margin-top: 10px;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .logout {
+      background: #e53935;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <div class="company">
+      🏢 ABC Company
+    </div>
+
+    <div>
+      Website Perusahaan Demo
+    </div>
+  </div>
+
+
+  <div class="container">
+
+    <!-- LOGIN -->
+
+    <div class="card" id="loginCard">
+
+      <h2>Login Customer</h2>
+
+      <p>
+        Silakan login untuk masuk ke akun Anda.
+      </p>
+
+      <div class="login-box">
+
+        <select id="customerSelect">
+
+          <option value="">
+            Pilih akun
+          </option>
+
+          <option value="USER001">
+            USER001 - Andi
+          </option>
+
+          <option value="USER002">
+            USER002 - Budi
+          </option>
+
+          <option value="USER003">
+            USER003 - Citra
+          </option>
+
+        </select>
+
+        <button onclick="loginCustomer()">
+          Login
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- DASHBOARD -->
+
+    <div
+      class="card dashboard"
+      id="dashboard"
+    >
+
+      <h2>Dashboard Customer</h2>
+
+      <p>
+        Selamat datang,
+        <b id="customerName"></b>
+      </p>
+
+      <div class="status">
+        ● Anda sedang login
+      </div>
+
+      <button
+        class="live-chat"
+        onclick="openLiveChat()"
+      >
+        💬 Buka Live Chat
+      </button>
+
+      <button
+        class="logout"
+        onclick="logoutCustomer()"
+      >
+        Logout
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    /*
+     * ==============================
+     * AI-CS SERVER
+     * ==============================
+     */
+
+    const AI_CS_SERVER =
+      "https://ai-cs-pt47.onrender.com";
+
+
+    /*
+     * ==============================
+     * LOGIN
+     * ==============================
+     */
+
+    async function loginCustomer() {
+
+      const customerId =
+        document
+          .getElementById("customerSelect")
+          .value;
+
+      if (!customerId) {
+
+        alert(
+          "Silakan pilih akun terlebih dahulu."
+        );
+
+        return;
+      }
+
+      try {
+
+        const response =
+          await fetch(
+            AI_CS_SERVER + "/login",
+            {
+              method: "POST",
+
+              credentials: "include",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              body: JSON.stringify({
+
+                customerId:
+                  customerId,
+
+                companyId:
+                  "ABC001"
+
+              })
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok ||
+            !data.success) {
+
+          alert(
+            data.message ||
+            "Login gagal."
+          );
+
+          return;
+        }
+
+
+        document.getElementById(
+          "loginCard"
+        ).style.display = "none";
+
+
+        document.getElementById(
+          "dashboard"
+        ).style.display = "block";
+
+
+        document.getElementById(
+          "customerName"
+        ).textContent =
+          data.customer.name ||
+          customerId;
+
+
+        alert(
+          "Login berhasil sebagai " +
+          customerId
+        );
+
+      } catch (error) {
+
+        console.error(
+          "LOGIN ERROR:",
+          error
+        );
+
+        alert(
+          "Tidak dapat terhubung ke AI-CS."
+        );
+
+      }
+
+    }
+
+
+    /*
+     * ==============================
+     * OPEN LIVE CHAT
+     * ==============================
+     */
+
+    function openLiveChat() {
+
+      /*
+       * Widget AI-CS dibuat oleh
+       * widget.js.
+       */
+
+      const widgetButton =
+        document.getElementById(
+          "ai-cs-button"
+        );
+
+      if (widgetButton) {
+
+        widgetButton.click();
+
+        return;
+
+      }
+
+
+      alert(
+        "Widget AI-CS belum dimuat."
+      );
+
+    }
+
+
+    /*
+     * ==============================
+     * LOGOUT
+     * ==============================
+     */
+
+    async function logoutCustomer() {
+
+      try {
+
+        await fetch(
+          AI_CS_SERVER + "/logout",
+          {
+            method: "POST",
+            credentials: "include"
+          }
+        );
+
+      } catch (error) {
+
+        console.error(
+          "LOGOUT ERROR:",
+          error
+        );
+
+      }
+
+
+      document.getElementById(
+        "dashboard"
+      ).style.display = "none";
+
+
+      document.getElementById(
+        "loginCard"
+      ).style.display = "block";
+
+
+      document.getElementById(
+        "customerSelect"
+      ).value = "";
+
+    }
+
+  </script>
+
+
+  <!--
+    AI CUSTOMER SERVICE WIDGET
+
+    Widget berasal dari server AI-CS kita.
+  -->
+
+  <script>
+    window.AI_CS_SERVER =
+      "https://ai-cs-pt47.onrender.com";
+  </script>
+
+  <script
+    src="https://ai-cs-pt47.onrender.com/widget.js">
+  </script>
+
+</body>
+</html>
+```
